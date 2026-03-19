@@ -1,1 +1,48 @@
+plugins {
+    id 'com.android.application'
+}
 
+android {
+    namespace 'com.ydrop.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.ydrop.app"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            debuggable false
+        }
+        debug {
+            debuggable true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        // Keep only arm64-v8a for modern phones (smaller APK)
+        abiFilters 'arm64-v8a'
+    }
+}
+
+dependencies {
+    // Embedded HTTP server (tiny, ~50KB)
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+
+    // FFmpeg for Android (audio/video merging)
+    implementation 'com.arthenica:ffmpeg-kit-android-min:6.0-2'
+
+    // AndroidX
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core:1.12.0'
+}
