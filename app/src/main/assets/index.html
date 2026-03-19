@@ -2,286 +2,297 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>YDROP</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Space Grotesk',sans-serif;background:#0d0d0f;color:#f0ede8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.wrap{width:100%;max-width:560px}
-
-/* Logo */
-.logo{text-align:center;margin-bottom:36px}
-.logo h1{font-size:52px;font-weight:700;letter-spacing:-1px;color:#fff}
-.logo h1 span{color:#ff5c35}
-.logo p{font-family:'JetBrains Mono',monospace;font-size:11px;color:#555;letter-spacing:3px;text-transform:uppercase;margin-top:4px}
-
-/* Card */
-.card{background:#17171a;border:1px solid #252528;border-radius:16px;padding:24px;margin-bottom:16px}
-
-/* Input */
-.input-row{display:flex;gap:10px}
-input[type=text]{flex:1;background:#0d0d0f;border:1.5px solid #2a2a2e;border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#f0ede8;outline:none;transition:border-color .2s}
-input[type=text]::placeholder{color:#444}
-input[type=text]:focus{border-color:#ff5c35}
-.btn{background:#ff5c35;color:#fff;border:none;border-radius:10px;padding:14px 22px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap;transition:all .15s}
-.btn:hover{background:#ff7a57;transform:translateY(-1px)}
-.btn:active{transform:translateY(0)}
-.btn:disabled{background:#2a2a2e;color:#555;cursor:not-allowed;transform:none}
-.btn.green{background:#22c55e}
-.btn.green:hover{background:#4ade80}
-.btn.ghost{background:transparent;border:1.5px solid #2a2a2e;color:#aaa}
-.btn.ghost:hover{border-color:#555;color:#fff}
-
-/* Preview */
-#preview{display:none;animation:fadeup .3s ease}
-@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.video-row{display:flex;gap:14px;margin-bottom:20px}
-.thumb{width:130px;height:73px;border-radius:8px;overflow:hidden;background:#111;flex-shrink:0;border:1px solid #222;position:relative}
-.thumb img{width:100%;height:100%;object-fit:cover}
-.dur{position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,.85);font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 5px;border-radius:4px}
-.vmeta{flex:1;min-width:0}
-.vtitle{font-size:14px;font-weight:500;line-height:1.4;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.vsub{font-family:'JetBrains Mono',monospace;font-size:11px;color:#555}
-
-/* Mode */
-.lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#555;margin-bottom:10px;display:block}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f5f5f0;color:#1a1a1a;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid #e8e8e2;padding:14px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.logo-icon{width:34px;height:34px;flex-shrink:0}
+.logo-text{font-size:20px;font-weight:800;color:#1a1a1a;letter-spacing:-0.5px}
+.logo-text span{color:#ff4d00}
+.badge{margin-left:auto;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px}
+.badge-warn{background:#fff3e0;color:#e65100}
+#setup-screen{padding:48px 24px;text-align:center}
+.setup-circle{width:80px;height:80px;margin:0 auto 20px;background:#fff8f5;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #ffe0d0}
+.setup-title{font-size:22px;font-weight:700;margin-bottom:8px;color:#1a1a1a}
+.setup-sub{font-size:14px;color:#888;line-height:1.7;margin-bottom:28px}
+.setup-bar-bg{background:#e8e8e2;border-radius:4px;height:6px;overflow:hidden;margin-bottom:10px;border-radius:99px}
+.setup-bar-fill{height:100%;background:linear-gradient(90deg,#ff4d00,#ff8c00);border-radius:99px;width:0%;transition:width 0.5s ease}
+.setup-msg{font-size:12px;color:#aaa;font-family:'JetBrains Mono',monospace}
+.content{padding:20px;display:none}
+.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#bbb;margin-bottom:10px;display:block}
+.url-row{display:flex;gap:8px}
+.url-in{flex:1;border:1.5px solid #ebebeb;border-radius:10px;padding:13px 14px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;color:#1a1a1a;background:#fafaf8;outline:none;transition:border-color .2s}
+.url-in:focus{border-color:#ff4d00;background:#fff}
+.url-in::placeholder{color:#ccc}
+.btn-fetch{background:#1a1a1a;color:#fff;border:none;border-radius:10px;padding:13px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;transition:background .15s}
+.btn-fetch:hover{background:#333}
+.btn-fetch:disabled{background:#eee;color:#bbb;cursor:not-allowed}
+#preview-card{display:none;animation:up .25s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.thumb-wrap{position:relative;border-radius:12px;overflow:hidden;margin-bottom:14px}
+.thumb-wrap img{width:100%;height:170px;object-fit:cover;display:block}
+.thumb-dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace}
+.vtitle{font-size:15px;font-weight:600;line-height:1.4;margin-bottom:3px}
+.vmeta{font-size:12px;color:#aaa}
+#options-card{display:none;animation:up .25s ease}
 .modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
-.mode{border:1.5px solid #2a2a2e;border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .15s}
-.mode:hover{border-color:#444}
-.mode.on{border-color:#ff5c35;background:rgba(255,92,53,.07)}
-.mode-icon{font-size:22px;display:block;margin-bottom:3px}
-.mode-name{font-size:13px;font-weight:600}
-.mode-hint{font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;display:block;margin-top:2px}
-
-/* Quality */
-#qual-section{margin-bottom:18px}
-.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.pill{padding:6px 14px;border:1.5px solid #2a2a2e;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;color:#666;transition:all .15s}
-.pill:hover{border-color:#555;color:#aaa}
-.pill.on{border-color:#ff5c35;background:rgba(255,92,53,.1);color:#ff7a57}
-
-/* Progress */
-#prog{display:none;animation:fadeup .3s ease}
-.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.prog-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff5c35;letter-spacing:1px}
-.prog-pct{font-size:32px;font-weight:700;color:#fff}
-.bar-bg{height:4px;background:#252528;border-radius:2px;margin-bottom:12px;overflow:hidden}
-.bar-fill{height:100%;background:linear-gradient(to right,#c43516,#ff5c35);border-radius:2px;transition:width .4s ease;width:0}
+.mode-tile{border:1.5px solid #ebebeb;border-radius:12px;padding:14px;text-align:center;cursor:pointer;background:#fafaf8;transition:all .15s}
+.mode-tile.on{border-color:#ff4d00;background:#fff8f5}
+.mode-em{font-size:26px;margin-bottom:4px}
+.mode-nm{font-size:13px;font-weight:600}
+.mode-ht{font-size:11px;color:#bbb;margin-top:2px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{padding:7px 14px;border:1.5px solid #ebebeb;border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;background:#fafaf8;color:#888;transition:all .15s;font-family:'JetBrains Mono',monospace}
+.pill.on{border-color:#ff4d00;background:#fff8f5;color:#ff4d00;font-weight:600}
+.btn-dl{width:100%;padding:16px;border:none;border-radius:12px;background:#ff4d00;color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-top:18px;letter-spacing:-0.2px;transition:all .15s}
+.btn-dl:active{transform:scale(0.98);background:#e64400}
+#prog-card{display:none;animation:up .25s ease}
+.prog-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+.prog-lbl{font-size:11px;font-weight:700;letter-spacing:1.5px;color:#ff4d00}
+.prog-pct{font-size:40px;font-weight:800;color:#1a1a1a;letter-spacing:-2px;line-height:1}
+.prog-bg{height:6px;background:#f0f0eb;border-radius:99px;overflow:hidden;margin-bottom:14px}
+.prog-fill{height:100%;background:linear-gradient(90deg,#ff4d00,#ff8c00);border-radius:99px;transition:width .4s ease;width:0}
 .stats{display:flex;gap:20px}
-.stat-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#444;margin-bottom:2px}
-.stat-val{font-family:'JetBrains Mono',monospace;font-size:13px;color:#f0ede8}
-
-/* Result */
-#result{display:none;animation:fadeup .3s ease}
-.ok{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:12px;padding:20px}
-.fail{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:20px}
-.r-icon{font-size:30px;margin-bottom:8px}
-.r-title{font-size:20px;font-weight:700;margin-bottom:4px}
-.r-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:#555}
-.r-path{margin-top:10px;background:#0d0d0f;border-radius:8px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff5c35;word-break:break-all}
-
-/* Spinner */
-.spin{display:inline-block;width:13px;height:13px;border:2px solid #333;border-top-color:#ff5c35;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+.sl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#ccc;margin-bottom:3px}
+.sv{font-size:14px;font-weight:600;color:#1a1a1a;font-family:'JetBrains Mono',monospace}
+.prog-sub{font-size:12px;color:#bbb;margin-top:12px;font-family:'JetBrains Mono',monospace}
+#result-card{display:none;border-radius:16px;overflow:hidden;animation:up .25s ease}
+.r-ok{background:#f0faf5;border:1.5px solid #86efac;padding:28px 20px;text-align:center}
+.r-fail{background:#fff5f5;border:1.5px solid #fca5a5;padding:28px 20px;text-align:center}
+.r-icon{font-size:44px;margin-bottom:12px}
+.r-title{font-size:20px;font-weight:700;margin-bottom:6px}
+.r-sub{font-size:13px;color:#888;margin-bottom:16px;line-height:1.6}
+.r-path{background:#fff;border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#ff4d00;word-break:break-all;text-align:left;margin-bottom:16px}
+.btn-again{background:#1a1a1a;color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* Status msg */
-#status-msg{font-family:'JetBrains Mono',monospace;font-size:11px;color:#555;margin-top:12px;min-height:16px}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="logo">
-    <h1>YD<span>R</span>OP</h1>
-    <p>Personal YouTube Downloader</p>
+<div class="topbar">
+  <svg class="logo-icon" viewBox="0 0 34 34" fill="none">
+    <rect width="34" height="34" rx="9" fill="#ff4d00"/>
+    <path d="M11 12l6 9 6-9" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="11" y1="25" x2="23" y2="25" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
+  <span class="logo-text">YD<span>R</span>OP</span>
+  <span class="badge badge-warn" id="top-badge" style="display:none">Setting up...</span>
+</div>
+
+<!-- Setup screen -->
+<div id="setup-screen">
+  <div class="setup-circle">
+    <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+      <path d="M19 8v14M19 22l-6-6M19 22l6-6" stroke="#ff4d00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 30h22" stroke="#ff4d00" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
   </div>
+  <div class="setup-title">Setting up YDROP</div>
+  <div class="setup-sub">Downloading the download engine.<br/>Takes about 30 seconds — only once.</div>
+  <div class="setup-bar-bg"><div class="setup-bar-fill" id="s-bar"></div></div>
+  <div class="setup-msg" id="s-msg">Starting...</div>
+</div>
 
-  <!-- URL INPUT -->
+<!-- Main UI -->
+<div class="content" id="main">
+
   <div class="card">
-    <div class="input-row">
-      <input type="text" id="url" placeholder="Paste YouTube URL here..." autocomplete="off" spellcheck="false"/>
-      <button class="btn" id="fetch-btn" onclick="fetchInfo()">FETCH</button>
+    <span class="lbl">YouTube URL</span>
+    <div class="url-row">
+      <input class="url-in" type="url" id="url" placeholder="Paste YouTube link..." autocomplete="off"/>
+      <button class="btn-fetch" id="fetch-btn" onclick="fetchInfo()">Fetch</button>
     </div>
   </div>
 
-  <!-- VIDEO PREVIEW + OPTIONS -->
-  <div class="card" id="preview">
-    <div class="video-row">
-      <div class="thumb"><img id="thumb" src="" alt=""/><span class="dur" id="dur"></span></div>
-      <div class="vmeta">
-        <div class="vtitle" id="vtitle"></div>
-        <div class="vsub" id="vsub"></div>
-      </div>
+  <div class="card" id="preview-card">
+    <div class="thumb-wrap">
+      <img id="thumb" src="" alt=""/>
+      <span class="thumb-dur" id="dur"></span>
     </div>
+    <div class="vtitle" id="vtitle"></div>
+    <div class="vmeta" id="vmeta"></div>
+  </div>
 
-    <span class="lbl">Mode</span>
+  <div class="card" id="options-card">
+    <span class="lbl">Format</span>
     <div class="modes">
-      <div class="mode on" id="m-video" onclick="setMode('video')">
-        <span class="mode-icon">🎬</span>
-        <span class="mode-name">Video + Audio</span>
-        <span class="mode-hint">saves as .mp4</span>
+      <div class="mode-tile on" id="m-v" onclick="setMode('video')">
+        <div class="mode-em">🎬</div>
+        <div class="mode-nm">Video</div>
+        <div class="mode-ht">MP4</div>
       </div>
-      <div class="mode" id="m-audio" onclick="setMode('audio')">
-        <span class="mode-icon">🎵</span>
-        <span class="mode-name">Audio Only</span>
-        <span class="mode-hint">saves as .mp3</span>
+      <div class="mode-tile" id="m-a" onclick="setMode('audio')">
+        <div class="mode-em">🎵</div>
+        <div class="mode-nm">Audio</div>
+        <div class="mode-ht">MP3</div>
       </div>
     </div>
-
-    <div id="qual-section">
+    <div id="qs">
       <span class="lbl">Quality</span>
       <div class="pills" id="pills"></div>
     </div>
-
-    <button class="btn green" style="width:100%;padding:16px;font-size:16px" onclick="startDownload()">
-      ⬇ &nbsp;DOWNLOAD
-    </button>
+    <button class="btn-dl" onclick="startDownload()">⬇ Download</button>
   </div>
 
-  <!-- PROGRESS -->
-  <div class="card" id="prog">
-    <div class="prog-top">
-      <span class="prog-label" id="prog-lbl"><span class="spin"></span>DOWNLOADING</span>
-      <span class="prog-pct" id="prog-pct">0%</span>
+  <div class="card" id="prog-card">
+    <div class="prog-head">
+      <span class="prog-lbl" id="p-lbl">DOWNLOADING</span>
+      <span class="prog-pct" id="p-pct">0%</span>
     </div>
-    <div class="bar-bg"><div class="bar-fill" id="bar"></div></div>
+    <div class="prog-bg"><div class="prog-fill" id="p-bar"></div></div>
     <div class="stats">
-      <div><div class="stat-lbl">Size</div><div class="stat-val" id="s-size">—</div></div>
-      <div><div class="stat-lbl">Speed</div><div class="stat-val" id="s-speed">—</div></div>
-      <div><div class="stat-lbl">ETA</div><div class="stat-val" id="s-eta">—</div></div>
+      <div><div class="sl">Size</div><div class="sv" id="p-sz">—</div></div>
+      <div><div class="sl">Speed</div><div class="sv" id="p-sp">—</div></div>
+      <div><div class="sl">ETA</div><div class="sv" id="p-eta">—</div></div>
     </div>
-    <div id="status-msg"></div>
+    <div class="prog-sub" id="p-sub"></div>
   </div>
 
-  <!-- RESULT -->
-  <div id="result"></div>
-
+  <div id="result-card"></div>
 </div>
+
 <script>
 let mode='video', quality='best', es=null;
 
-document.getElementById('url').addEventListener('keydown',e=>{if(e.key==='Enter')fetchInfo()});
-document.getElementById('url').addEventListener('paste',()=>setTimeout(()=>{
-  const v=document.getElementById('url').value;
-  if(v.includes('youtube.com')||v.includes('youtu.be'))fetchInfo();
-},60));
-
-async function fetchInfo(){
-  const url=document.getElementById('url').value.trim();
-  if(!url)return shake();
-  const btn=document.getElementById('fetch-btn');
-  btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
-  hide('preview');hide('prog');hide('result');
-  try{
-    const r=await fetch('/info?url='+encodeURIComponent(url));
-    const d=await r.json();
-    if(d.error)throw new Error(d.error);
-    document.getElementById('thumb').src=d.thumbnail;
-    document.getElementById('dur').textContent=d.duration;
-    document.getElementById('vtitle').textContent=d.title;
-    document.getElementById('vsub').textContent=(d.uploader||'')+(d.views?' · '+fmtViews(d.views)+' views':'');
-    buildPills(d.formats);
-    show('preview');
-  }catch(e){
-    showResult(false,'Could not fetch video','Check the URL and make sure the server is running.');
+async function boot() {
+  let tries = 0;
+  while (tries < 30) {
+    try {
+      const r = await fetch('/health');
+      if (r.ok) {
+        const d = await r.json();
+        if (d.ready) { setSetup(100,'Ready!'); setTimeout(showMain,300); return; }
+        document.getElementById('top-badge').style.display='inline';
+        watchSetup(); return;
+      }
+    } catch(e) {}
+    setSetup(Math.min(30, tries * 3), 'Connecting to app...');
+    await sleep(500); tries++;
   }
-  btn.disabled=false;btn.innerHTML='FETCH';
+  showMain();
 }
 
-function buildPills(formats){
-  const c=document.getElementById('pills');
-  c.innerHTML='';quality='best';
-  const best=pill('Best','best',true);c.appendChild(best);
-  formats.forEach(f=>{const p=pill(f.label,f.value,false);c.appendChild(p)});
-}
-function pill(label,val,active){
-  const p=document.createElement('div');
-  p.className='pill'+(active?' on':'');
-  p.textContent=label;
-  p.onclick=()=>{document.querySelectorAll('.pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');quality=val};
-  return p;
+async function watchSetup() {
+  let p = 20;
+  while (true) {
+    await sleep(1500);
+    try {
+      const r = await fetch('/health');
+      const d = await r.json();
+      p = Math.min(95, p + 5);
+      setSetup(p, 'Downloading engine... ' + p + '%');
+      if (d.ready) { setSetup(100,'Done!'); document.getElementById('top-badge').style.display='none'; setTimeout(showMain,400); return; }
+    } catch(e) {}
+    if (p >= 95) { showMain(); return; }
+  }
 }
 
-function setMode(m){
+function setSetup(pct, msg) {
+  document.getElementById('s-bar').style.width = pct+'%';
+  document.getElementById('s-msg').textContent = msg;
+}
+function showMain() {
+  document.getElementById('setup-screen').style.display='none';
+  document.getElementById('main').style.display='block';
+}
+
+async function fetchInfo() {
+  const url = document.getElementById('url').value.trim();
+  if (!url) { document.getElementById('url').style.borderColor='#ff4d00'; setTimeout(()=>document.getElementById('url').style.borderColor='',800); return; }
+  const btn = document.getElementById('fetch-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
+  ['preview-card','options-card','prog-card','result-card'].forEach(hide);
+  try {
+    const r = await fetch('/info?url='+encodeURIComponent(url));
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    document.getElementById('thumb').src = d.thumbnail;
+    document.getElementById('dur').textContent = d.duration;
+    document.getElementById('vtitle').textContent = d.title;
+    document.getElementById('vmeta').textContent = (d.uploader||'')+(d.views?' · '+fv(d.views)+' views':'');
+    buildPills(d.formats);
+    show('preview-card'); show('options-card');
+  } catch(e) {
+    showResult(false,'Could not fetch video','Make sure the URL is a valid YouTube link.\n'+e.message);
+  }
+  btn.disabled=false; btn.textContent='Fetch';
+}
+
+function buildPills(fmts) {
+  const c=document.getElementById('pills'); c.innerHTML=''; quality='best';
+  const add=(l,v,a)=>{ const p=document.createElement('div'); p.className='pill'+(a?' on':''); p.textContent=l;
+    p.onclick=()=>{ document.querySelectorAll('.pill').forEach(x=>x.classList.remove('on')); p.classList.add('on'); quality=v; }; c.appendChild(p); };
+  add('Best','best',true); (fmts||[]).forEach(f=>add(f.label,f.value,false));
+}
+
+function setMode(m) {
   mode=m;
-  document.getElementById('m-video').classList.toggle('on',m==='video');
-  document.getElementById('m-audio').classList.toggle('on',m==='audio');
-  document.getElementById('qual-section').style.display=m==='audio'?'none':'block';
+  document.getElementById('m-v').classList.toggle('on',m==='video');
+  document.getElementById('m-a').classList.toggle('on',m==='audio');
+  document.getElementById('qs').style.display=m==='audio'?'none':'block';
 }
 
-function startDownload(){
-  const url=document.getElementById('url').value.trim();
-  if(!url)return;
+function startDownload() {
+  const url=document.getElementById('url').value.trim(); if(!url)return;
   if(es)es.close();
-  hide('preview');hide('result');
-  show('prog');
-  resetProg();
-  const p=new URLSearchParams({url,mode,quality});
-  es=new EventSource('/download?'+p);
-  es.onmessage=e=>{
+  ['options-card','preview-card','result-card'].forEach(hide); show('prog-card');
+  document.getElementById('p-pct').textContent='0%';
+  document.getElementById('p-bar').style.width='0';
+  document.getElementById('p-lbl').textContent='DOWNLOADING';
+  ['p-sz','p-sp','p-eta'].forEach(id=>document.getElementById(id).textContent='—');
+
+  es = new EventSource('/download?'+new URLSearchParams({url,mode,quality}));
+  es.onmessage = e => {
     const d=JSON.parse(e.data);
-    if(d.type==='progress'){
-      setProg(d.percent,d.size,d.speed,d.eta);
-    }else if(d.type==='status'){
-      document.getElementById('prog-lbl').innerHTML=d.message;
-      setProg(98);
-    }else if(d.type==='done'){
-      es.close();hide('prog');
-      showResult(true,'Download Complete!','Saved to your Downloads\\YTDownloader folder',d.folder);
-    }else if(d.type==='fail'){
-      es.close();hide('prog');
-      showResult(false,'Download Failed',d.message);
+    if(d.type==='progress') {
+      const p=parseFloat(d.percent);
+      document.getElementById('p-pct').textContent=p.toFixed(1)+'%';
+      document.getElementById('p-bar').style.width=p+'%';
+      document.getElementById('p-sz').textContent=d.size||'—';
+      document.getElementById('p-sp').textContent=d.speed||'—';
+      document.getElementById('p-eta').textContent=d.eta||'—';
+    } else if(d.type==='status') {
+      document.getElementById('p-lbl').textContent=(d.message||'').toUpperCase();
+    } else if(d.type==='done') {
+      es.close(); hide('prog-card');
+      showResult(true,'Download Complete!','File saved to Downloads/YTDownloader',d.folder);
+    } else if(d.type==='fail') {
+      es.close(); hide('prog-card');
+      showResult(false,'Download Failed',d.message||'Please try again.');
     }
   };
   es.onerror=()=>es.close();
 }
 
-function resetProg(){
-  setProg(0,'—','—','—');
-  document.getElementById('prog-lbl').innerHTML='<span class="spin"></span>DOWNLOADING';
-  document.getElementById('status-msg').textContent='';
-}
-function setProg(pct,size,speed,eta){
-  document.getElementById('prog-pct').textContent=pct.toFixed?pct.toFixed(1)+'%':pct+'%';
-  document.getElementById('bar').style.width=pct+'%';
-  if(size!=null)document.getElementById('s-size').textContent=size;
-  if(speed!=null)document.getElementById('s-speed').textContent=speed;
-  if(eta!=null)document.getElementById('s-eta').textContent=eta;
-}
-
-function showResult(ok,title,sub,folder){
-  const el=document.getElementById('result');
-  el.innerHTML=`<div class="${ok?'ok':'fail'}">
+function showResult(ok,title,sub,folder) {
+  const el=document.getElementById('result-card');
+  el.innerHTML=`<div class="${ok?'r-ok':'r-fail'}">
     <div class="r-icon">${ok?'✅':'⚠️'}</div>
     <div class="r-title">${title}</div>
     <div class="r-sub">${sub}</div>
     ${folder?`<div class="r-path">📁 ${folder}</div>`:''}
-    <br/><button class="btn ghost" style="width:100%" onclick="resetAll()">⟳ Download Another</button>
-  </div>`;
-  show('result');
+    <button class="btn-again" onclick="resetAll()">Download Another</button>
+  </div>`; show('result-card');
 }
-
-function resetAll(){
-  hide('result');hide('prog');hide('preview');
+function resetAll() {
+  ['result-card','prog-card','preview-card','options-card'].forEach(hide);
   document.getElementById('url').value='';
-  document.getElementById('url').focus();
 }
-
 function show(id){document.getElementById(id).style.display='block'}
 function hide(id){document.getElementById(id).style.display='none'}
-function shake(){
-  const el=document.getElementById('url');
-  el.style.borderColor='#ff5c35';
-  setTimeout(()=>el.style.borderColor='',800);
-}
-function fmtViews(n){
-  if(!n)return'?';
-  if(n>=1e9)return(n/1e9).toFixed(1)+'B';
-  if(n>=1e6)return(n/1e6).toFixed(1)+'M';
-  if(n>=1e3)return(n/1e3).toFixed(1)+'K';
-  return n;
-}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function fv(n){if(!n)return'?';if(n>=1e9)return(n/1e9).toFixed(1)+'B';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('url').addEventListener('keydown',e=>{ if(e.key==='Enter')fetchInfo(); });
+  document.getElementById('url').addEventListener('paste',()=>setTimeout(()=>{ const v=document.getElementById('url').value; if(v.includes('youtube.com')||v.includes('youtu.be'))fetchInfo(); },80));
+  boot();
+});
 </script>
 </body>
 </html>
