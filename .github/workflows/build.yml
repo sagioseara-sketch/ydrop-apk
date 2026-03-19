@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,22 +19,18 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Install Gradle 8.4
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.4'
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+      - name: Build APK
+        run: gradle assembleDebug --no-daemon --warning-mode none
 
-      - name: Download Gradle wrapper jar
-        run: |
-          mkdir -p gradle/wrapper
-          curl -L -o gradle/wrapper/gradle-wrapper.jar \
-            https://github.com/gradle/gradle/raw/v8.4.0/gradle/wrapper/gradle-wrapper.jar
-
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon --warning-mode none
-
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: YDROP-APK
@@ -46,6 +43,6 @@ jobs:
           tag_name: v1.${{ github.run_number }}
           name: "YDROP v1.${{ github.run_number }}"
           files: app/build/outputs/apk/debug/app-debug.apk
-          body: "YDROP YouTube Downloader — install on Android"
+          body: "YDROP YouTube Downloader APK"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
