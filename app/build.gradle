@@ -17,7 +17,6 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            debuggable false
         }
         debug {
             debuggable true
@@ -28,21 +27,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    packagingOptions {
-        // Keep only arm64-v8a for modern phones (smaller APK)
-        abiFilters 'arm64-v8a'
-    }
 }
 
 dependencies {
-    // Embedded HTTP server (tiny, ~50KB)
-    implementation 'org.nanohttpd:nanohttpd:2.3.1'
-
-    // FFmpeg for Android (audio/video merging)
-    implementation 'com.arthenica:ffmpeg-kit-android-min:6.0-2'
-
-    // AndroidX
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.core:core:1.12.0'
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
 }
