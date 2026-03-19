@@ -34,7 +34,7 @@ public class LocalServer extends NanoHTTPD {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
             "YTDownloader");
         if (!downloadDir.exists()) downloadDir.mkdirs();
-        this.ytdlp = new File(ctx.getFilesDir(), "yt-dlp");
+        File execDir = ctx.getCodeCacheDir(); if (!execDir.exists()) execDir.mkdirs(); this.ytdlp = new File(execDir, "yt-dlp");
 
         // Pre-download yt-dlp in background on startup
         new Thread(() -> {
