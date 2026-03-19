@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,30 +18,34 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
 
-      - name: Generate Gradle Wrapper
-        run: gradle wrapper --gradle-version 8.4
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Download Gradle wrapper jar
+        run: |
+          mkdir -p gradle/wrapper
+          curl -L -o gradle/wrapper/gradle-wrapper.jar \
+            https://github.com/gradle/gradle/raw/v8.4.0/gradle/wrapper/gradle-wrapper.jar
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: ./gradlew assembleDebug --no-daemon --warning-mode none
 
-      - name: Upload APK as artifact
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: YDROP-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
-      - name: Create GitHub Release with APK
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.${{ github.run_number }}
           name: "YDROP v1.${{ github.run_number }}"
           files: app/build/outputs/apk/debug/app-debug.apk
-          body: |
-            YDROP YouTube Downloader APK
-            Install on Android — enable "Install from unknown sources" first.
+          body: "YDROP YouTube Downloader — install on Android"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
