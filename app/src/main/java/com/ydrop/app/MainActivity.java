@@ -1,6 +1,7 @@
 package com.ydrop.app;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,94 +9,127 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebChromeClient;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int PORT = 7777;
     private WebView webView;
     private LocalServer server;
+    private static final int PORT = 7777;
+    private static final int REQ_STORAGE = 100;
+    private static final int REQ_MANAGE  = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Full screen WebView
         webView = new WebView(this);
         setContentView(webView);
 
-        // WebView settings
-        WebSettings ws = webView.getSettings();
-        ws.setJavaScriptEnabled(true);
-        ws.setDomStorageEnabled(true);
-        ws.setAllowFileAccess(true);
-        ws.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        ws.setLoadWithOverviewMode(true);
-        ws.setUseWideViewPort(true);
-
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest req) {
-                return false;
-            }
-        });
+        WebSettings s = webView.getSettings();
+        s.setJavaScriptEnabled(true);
+        s.setDomStorageEnabled(true);
+        s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        s.setAllowFileAccess(true);
+        webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
 
-        // Request storage permissions
-        requestStoragePermission();
-
-        // Start the local HTTP server
-        startServer();
+        // Ask for storage permission with explanation popup
+        requestStorageWithDialog();
     }
 
-    private void startServer() {
-        try {
-            server = new LocalServer(this, PORT);
-            server.start();
-
-            // Give server a moment to start, then load
-            webView.postDelayed(() -> {
-                webView.loadUrl("http://localhost:" + PORT);
-            }, 500);
-
-        } catch (Exception e) {
-            Toast.makeText(this, "Server error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void requestStoragePermission() {
+    private void requestStorageWithDialog() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // Android 11+ — request all files access
+            // Android 11+ — needs MANAGE_EXTERNAL_STORAGE
             if (!Environment.isExternalStorageManager()) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivity(intent);
+                new AlertDialog.Builder(this)
+                    .setTitle("Storage Permission Needed")
+                    .setMessage("YDROP needs access to your storage to save downloaded videos and music to your Downloads folder.")
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setCancelable(false)
+                    .setPositiveButton("Allow", (dialog, which) -> {
+                        Intent intent = new Intent(
+                            Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                            Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(intent, REQ_MANAGE);
+                    })
+                    .setNegativeButton("Skip", (dialog, which) -> {
+                        startServer();
+                    })
+                    .show();
+            } else {
+                startServer();
             }
-        } else {
-            // Android 9/10
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android 6–10 — runtime permission
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+                new AlertDialog.Builder(this)
+                    .setTitle("Storage Permission Needed")
+                    .setMessage("YDROP needs storage access to save downloaded videos and music to your Downloads folder.")
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setCancelable(false)
+                    .setPositiveButton("Allow", (dialog, which) -> {
+                        ActivityCompat.requestPermissions(this,
+                            new String[]{
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                            }, REQ_STORAGE);
+                    })
+                    .setNegativeButton("Skip", (dialog, which) -> {
+                        startServer();
+                    })
+                    .show();
+            } else {
+                startServer();
             }
+
+        } else {
+            // Android 5 and below — permission granted at install
+            startServer();
         }
     }
 
     @Override
-    public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
+    public void onRequestPermissionsResult(int requestCode,
+            String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(requestCode, permissions, results);
+        // Whether granted or denied, start the server
+        startServer();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // After returning from system settings, start the server
+        startServer();
+    }
+
+    private void startServer() {
+        if (server != null) return; // already started
+        try {
+            server = new LocalServer(this, PORT);
+            server.start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        webView.postDelayed(() -> webView.loadUrl("http://localhost:" + PORT), 800);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (webView.canGoBack()) webView.goBack();
+        else super.onBackPressed();
     }
 
     @Override
